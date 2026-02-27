@@ -1,15 +1,8 @@
 import { useState } from 'react'
-import { Routes, Route, Link, Navigate, useNavigate } from 'react-router-dom'
+import { Routes, Route, Link } from 'react-router-dom'
 import BlogList from './components/BlogList'
 import BlogAddPage from './components/BlogAddPage'
 import BlogEditPage from './components/BlogEditPage'
-import LoginPage from './components/LoginPage'
-import { isAuthenticated, clearAuth, getAdmin } from './auth.js'
-
-function ProtectedRoute({ children }) {
-  if (!isAuthenticated()) return <Navigate to="/login" replace />
-  return children
-}
 
 function MenuIcon() {
   return (
@@ -21,17 +14,8 @@ function MenuIcon() {
   )
 }
 
-function AppLayout() {
-  const navigate = useNavigate()
-  const admin = getAdmin()
+function App() {
   const [navOpen, setNavOpen] = useState(false)
-
-  const handleLogout = () => {
-    clearAuth()
-    setNavOpen(false)
-    navigate('/login', { replace: true })
-  }
-
   const closeNav = () => setNavOpen(false)
 
   return (
@@ -50,12 +34,6 @@ function AppLayout() {
         <nav className={`app-nav ${navOpen ? 'app-nav--open' : ''}`}>
           <Link to="/" className="app-nav-link" onClick={closeNav}>All blogs</Link>
           <Link to="/add" className="app-nav-link" onClick={closeNav}>Add blog</Link>
-          {admin?.email && (
-            <span className="app-nav-user">{admin.email}</span>
-          )}
-          <button type="button" onClick={handleLogout} className="app-nav-logout">
-            Logout
-          </button>
         </nav>
       </header>
       <main className="app-main">
@@ -66,15 +44,6 @@ function AppLayout() {
         </Routes>
       </main>
     </div>
-  )
-}
-
-function App() {
-  return (
-    <Routes>
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/*" element={<ProtectedRoute><AppLayout /></ProtectedRoute>} />
-    </Routes>
   )
 }
 

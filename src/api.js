@@ -1,8 +1,6 @@
-import { getToken, clearAuth } from './auth.js'
-
 /**
  * API client for Jashom backend. Base URL from env — no hardcoded URLs.
- * Adds Authorization: Bearer <token> when logged in.
+ * No auth; blogs API is public.
  */
 const getBaseUrl = () => {
   const url = import.meta.env.VITE_API_URL
@@ -16,23 +14,14 @@ const getBaseUrl = () => {
 const api = (path, options = {}) => {
   const base = getBaseUrl()
   const url = `${base}${path.startsWith('/') ? path : `/${path}`}`
-  const token = getToken()
   const headers = {
     'Content-Type': 'application/json',
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
     ...options.headers,
   }
-  return fetch(url, { ...options, headers }).then((r) => {
-    if (r.status === 401 && path !== '/v1/admin/auth/login') {
-      clearAuth()
-      window.location.href = '/login'
-      return Promise.reject(new Error('Session expired'))
-    }
-    return r
-  })
+  return fetch(url, { ...options, headers })
 }
 
-/** POST /v1/admin/auth/login — returns { token, admin } */
+/** POST /v1/admin/auth/login — optional, for future use */
 export const login = (email, password) =>
   api('/v1/admin/auth/login', {
     method: 'POST',

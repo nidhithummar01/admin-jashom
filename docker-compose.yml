@@ -1,9 +1,10 @@
 services:
   web:
-    image: docker.jashom.com/jashom-admin:${TAG}
+    build: .
+    image: docker.jashom.com/jashom-admin:${TAG:-latest}
     container_name: jashom-admin
 
     ports:
-      - "2129:8080"
+      - "2132:8080"
 
     restart: unless-stopped
