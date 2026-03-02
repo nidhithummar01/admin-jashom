@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import PropTypes from 'prop-types'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 
@@ -18,7 +19,7 @@ const DEFAULT_MODULES = {
  * WordPress-like rich text editor using Quill.
  * value/onChange are HTML strings (same as stored by the backend).
  */
-export default function RichTextEditor({ value = '', onChange, placeholder, minHeight = 180, className }) {
+function RichTextEditor({ value = '', onChange, placeholder, minHeight = 180, className }) {
   const modules = useMemo(() => DEFAULT_MODULES, [])
 
   const handleChange = (content, _delta, _source, editor) => {
@@ -40,3 +41,21 @@ export default function RichTextEditor({ value = '', onChange, placeholder, minH
     </div>
   )
 }
+
+RichTextEditor.propTypes = {
+  value: PropTypes.string,
+  onChange: PropTypes.func,
+  placeholder: PropTypes.string,
+  minHeight: PropTypes.number,
+  className: PropTypes.string,
+}
+
+RichTextEditor.defaultProps = {
+  value: '',
+  onChange: undefined,
+  placeholder: undefined,
+  minHeight: 180,
+  className: undefined,
+}
+
+export default RichTextEditor
