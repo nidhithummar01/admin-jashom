@@ -678,6 +678,17 @@ textarea {
   margin-bottom: 0.25rem;
 }
 
+.form-section-desc {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+
+.font-mono {
+  font-family: ui-monospace, monospace;
+  font-size: 0.8125rem;
+}
+
 .field {
   display: flex;
   flex-direction: column;
@@ -1206,3 +1217,33 @@ textarea {
   cursor: not-allowed;
   transform: none;
 }
+
+/* Quill rich text editor – match admin panel dark theme */
+.rich-text-editor-wrap { margin-top: 0.25rem; }
+.rich-text-editor-wrap .ql-toolbar.ql-snow {
+  border-color: var(--border);
+  background: var(--surface);
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+}
+.rich-text-editor-wrap .ql-container.ql-snow {
+  border-color: var(--border);
+  background: var(--bg-subtle);
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  font-size: 1rem;
+}
+.rich-text-editor-wrap .ql-editor {
+  min-height: 160px;
+  color: var(--text);
+}
+.rich-text-editor-wrap .ql-editor.ql-blank::before {
+  color: var(--text-muted);
+  font-style: normal;
+}
+.rich-text-editor-wrap .ql-snow .ql-stroke { stroke: var(--border); }
+.rich-text-editor-wrap .ql-snow .ql-fill { fill: var(--text-muted); }
+.rich-text-editor-wrap .ql-snow .ql-picker { color: var(--text-muted); }
+.rich-text-editor-wrap .ql-snow button:hover .ql-stroke,
+.rich-text-editor-wrap .ql-snow .ql-picker-label:hover .ql-stroke { stroke: var(--accent); }
+.rich-text-editor-wrap .ql-snow button:hover .ql-fill,
+.rich-text-editor-wrap .ql-snow .ql-picker-label:hover .ql-fill { fill: var(--accent); }
+.rich-text-editor-wrap .ql-snow .ql-picker-label.ql-active { color: var(--accent); }
