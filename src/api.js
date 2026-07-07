@@ -83,3 +83,65 @@ export const deleteBlog = (id) =>
   api(`/v1/admin/blogs/${id}`, { method: 'DELETE' }).then((r) => {
     if (!r.ok) throw new Error(r.statusText || 'Failed to delete blog')
   })
+
+// ── Jobs ────────────────────────────────────────────────────────────────────
+
+export const getJobs = (params = {}) => {
+  const q = new URLSearchParams()
+  if (params.status) q.set('status', params.status)
+  if (params.limit != null) q.set('limit', params.limit)
+  if (params.offset != null) q.set('offset', params.offset)
+  const query = q.toString()
+  return api(`/v1/admin/jobs${query ? `?${query}` : ''}`).then((r) => {
+    if (!r.ok) throw new Error(r.statusText || 'Failed to fetch jobs')
+    return r.json()
+  })
+}
+
+export const getJob = (id) =>
+  api(`/v1/admin/jobs/${id}`).then((r) => {
+    if (!r.ok) throw new Error(r.statusText || 'Failed to fetch job')
+    return r.json()
+  })
+
+export const createJob = (data) =>
+  api('/v1/admin/jobs', { method: 'POST', body: JSON.stringify(data) }).then((r) => {
+    if (!r.ok) return r.json().then((b) => { throw new Error(b.error || r.statusText) })
+    return r.json()
+  })
+
+export const updateJob = (id, data) =>
+  api(`/v1/admin/jobs/${id}`, { method: 'PUT', body: JSON.stringify(data) }).then((r) => {
+    if (!r.ok) return r.json().then((b) => { throw new Error(b.error || r.statusText) })
+    return r.json()
+  })
+
+export const deleteJob = (id) =>
+  api(`/v1/admin/jobs/${id}`, { method: 'DELETE' }).then((r) => {
+    if (!r.ok) throw new Error(r.statusText || 'Failed to delete job')
+  })
+
+// ── Applications ─────────────────────────────────────────────────────────────
+
+export const getApplications = (params = {}) => {
+  const q = new URLSearchParams()
+  if (params.job_id) q.set('job_id', params.job_id)
+  if (params.status) q.set('status', params.status)
+  if (params.limit != null) q.set('limit', params.limit)
+  const query = q.toString()
+  return api(`/v1/applications${query ? `?${query}` : ''}`).then((r) => {
+    if (!r.ok) throw new Error(r.statusText || 'Failed to fetch applications')
+    return r.json()
+  })
+}
+
+export const updateApplicationStatus = (id, status) =>
+  api(`/v1/applications/${id}`, { method: 'PUT', body: JSON.stringify({ status }) }).then((r) => {
+    if (!r.ok) return r.json().then((b) => { throw new Error(b.error || r.statusText) })
+    return r.json()
+  })
+
+export const deleteApplication = (id) =>
+  api(`/v1/applications/${id}`, { method: 'DELETE' }).then((r) => {
+    if (!r.ok) throw new Error(r.statusText || 'Failed to delete application')
+  })

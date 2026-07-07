@@ -146,6 +146,16 @@ textarea {
   }
 }
 
+.app-nav-section {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  padding: 0.5rem 0.75rem 0.15rem;
+  opacity: 0.6;
+}
+
 .app-nav-link {
   color: var(--text-muted);
   text-decoration: none;
@@ -451,6 +461,135 @@ textarea {
   overflow-y: auto;
 }
 
+.blog-list-item--applications {
+  cursor: default;
+}
+
+.blog-list-item--applications:hover {
+  border-color: var(--border);
+  box-shadow: none;
+}
+
+.applications-panel__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.applications-panel__title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.applications-panel__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.application-card {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 1rem 1.25rem;
+}
+
+.application-card__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.application-card__who strong {
+  font-size: 0.95rem;
+  color: var(--text);
+}
+
+.application-card__email {
+  margin-left: 0.6rem;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.application-card__phone {
+  margin-left: 0.5rem;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+.application-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.application-card__status {
+  font-size: 0.7rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.application-card__date {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.application-card__links {
+  margin-top: 0.6rem;
+  display: flex;
+  gap: 1rem;
+  font-size: 0.8rem;
+}
+
+.application-card__links a {
+  color: var(--accent);
+}
+
+.application-card__links a:hover {
+  color: var(--accent-hover);
+}
+
+.application-card__cover {
+  margin-top: 0.75rem;
+}
+
+.application-card__cover summary {
+  cursor: pointer;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  user-select: none;
+}
+
+.application-card__cover summary:hover {
+  color: var(--text);
+}
+
+.application-card__cover pre {
+  margin-top: 0.6rem;
+  padding: 0.75rem;
+  background: var(--surface-elevated);
+  border-radius: 6px;
+  white-space: pre-wrap;
+  font-size: 0.825rem;
+  color: var(--text);
+  font-family: var(--font-sans);
+}
+
+.application-card__actions {
+  margin-top: 0.75rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
 .blog-view-meta {
   display: flex;
   flex-wrap: wrap;
@@ -704,7 +843,8 @@ textarea {
 .field input[type="text"],
 .field input[type="url"],
 .field input[type="datetime-local"],
-.field textarea {
+.field textarea,
+.field select {
   padding: 0.65rem 0.9rem;
   background: var(--bg);
   border: 1px solid var(--border);
@@ -712,10 +852,27 @@ textarea {
   color: var(--text);
   font-size: 0.95rem;
   transition: border-color 0.2s;
+  width: 100%;
+}
+
+.field select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  padding-right: 2.5rem;
+  cursor: pointer;
+}
+
+.field select option {
+  background: var(--surface-elevated);
+  color: var(--text);
 }
 
 .field input:focus,
-.field textarea:focus {
+.field textarea:focus,
+.field select:focus {
   outline: none;
   border-color: var(--accent);
   box-shadow: 0 0 0 3px var(--accent-muted);

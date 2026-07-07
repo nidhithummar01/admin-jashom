@@ -3,6 +3,9 @@ import { Routes, Route, Link, Navigate, useNavigate } from 'react-router-dom'
 import BlogList from './components/BlogList'
 import BlogAddPage from './components/BlogAddPage'
 import BlogEditPage from './components/BlogEditPage'
+import JobList from './components/JobList'
+import JobAddPage from './components/JobAddPage'
+import JobEditPage from './components/JobEditPage'
 import LoginPage from './components/LoginPage'
 import { isAuthenticated, clearAuth, getAdmin } from './auth.js'
 
@@ -48,8 +51,12 @@ function AppLayout() {
           <MenuIcon />
         </button>
         <nav className={`app-nav ${navOpen ? 'app-nav--open' : ''}`}>
-          <Link to="/" className="app-nav-link" onClick={closeNav}>All blogs</Link>
-          <Link to="/add" className="app-nav-link" onClick={closeNav}>Add blog</Link>
+          <span className="app-nav-section">Blogs</span>
+          <Link to="/" className="app-nav-link" onClick={closeNav}>All Blogs</Link>
+          <Link to="/add" className="app-nav-link" onClick={closeNav}>Add Blog</Link>
+          <span className="app-nav-section">Jobs</span>
+          <Link to="/jobs" className="app-nav-link" onClick={closeNav}>All Jobs</Link>
+          <Link to="/jobs/add" className="app-nav-link" onClick={closeNav}>Add Job</Link>
           {admin?.email && (
             <span className="app-nav-user">{admin.email}</span>
           )}
@@ -63,6 +70,9 @@ function AppLayout() {
           <Route path="/" element={<BlogList />} />
           <Route path="/add" element={<BlogAddPage />} />
           <Route path="/edit/:id" element={<BlogEditPage />} />
+          <Route path="/jobs" element={<JobList />} />
+          <Route path="/jobs/add" element={<JobAddPage />} />
+          <Route path="/jobs/edit/:id" element={<JobEditPage />} />
         </Routes>
       </main>
     </div>
