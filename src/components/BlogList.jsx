@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { getBlogs, deleteBlog } from '../api'
 import BlogViewModal from './BlogViewModal'
+import ConfirmModal from './ConfirmModal'
 
 export default function BlogList() {
   const [blogs, setBlogs] = useState([])
@@ -26,13 +27,6 @@ export default function BlogList() {
   const closeDeleteConfirm = useCallback(() => {
     if (!deletingId) setDeleteConfirm(null)
   }, [deletingId])
-
-  useEffect(() => {
-    if (!deleteConfirm) return
-    const onKey = (e) => e.key === 'Escape' && closeDeleteConfirm()
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [deleteConfirm, closeDeleteConfirm])
 
   const handleConfirmDelete = () => {
     if (!deleteConfirm) return
@@ -96,38 +90,15 @@ export default function BlogList() {
         <BlogViewModal blog={viewing} onClose={() => setViewing(null)} />
       )}
       {deleteConfirm && (
-        <div
-          className="modal-backdrop modal-backdrop--center"
-          onClick={closeDeleteConfirm}
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="delete-confirm-title"
-        >
-          <div className="modal-content modal-content--confirm" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
-              <h2 id="delete-confirm-title" className="modal-title">Delete blog?</h2>
-              <button type="button" className="modal-close" onClick={closeDeleteConfirm} aria-label="Close">×</button>
-            </div>
-            <div className="modal-body">
-              <p className="delete-confirm-message">
-                &ldquo;{deleteConfirm.title}&rdquo; will be permanently deleted. This cannot be undone.
-              </p>
-              <div className="modal-actions">
-                <button type="button" className="btn btn-outline" onClick={closeDeleteConfirm} disabled={!!deletingId}>
-                  Cancel
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-danger"
-                  onClick={handleConfirmDelete}
-                  disabled={!!deletingId}
-                >
-                  {deletingId === deleteConfirm.id ? 'Deleting…' : 'Delete'}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ConfirmModal
+          titleId="delete-confirm-title"
+          title="Delete blog?"
+          message={<>&ldquo;{deleteConfirm.title}&rdquo; will be permanently deleted. This cannot be undone.</>}
+          onCancel={closeDeleteConfirm}
+          onConfirm={handleConfirmDelete}
+          confirmLabel={deletingId === deleteConfirm.id ? 'Deleting…' : 'Delete'}
+          busy={!!deletingId}
+        />
       )}
     </>
   )

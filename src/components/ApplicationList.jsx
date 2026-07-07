@@ -1,5 +1,7 @@
 import { Fragment, useState, useEffect, useCallback } from 'react'
+import PropTypes from 'prop-types'
 import { getApplications, deleteApplication } from '../api'
+import ConfirmModal from './ConfirmModal'
 
 const STATUS_COLOR = {
   new: '#3b82f6', reviewing: '#fbbf24', shortlisted: '#8b5cf6',
@@ -27,24 +29,19 @@ export default function ApplicationList({ job, onClose }) {
     if (!deletingId) setDeleteConfirm(null)
   }, [deletingId])
 
-  useEffect(() => {
-    if (!deleteConfirm) return
-    const onKey = (e) => e.key === 'Escape' && closeDeleteConfirm()
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [deleteConfirm, closeDeleteConfirm])
-
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async () => {
     if (!deleteConfirm) return
     const appId = deleteConfirm.id
     setDeletingId(appId)
-    deleteApplication(appId)
-      .then(() => {
-        setApps((prev) => prev.filter((a) => a.id !== appId))
-        setDeleteConfirm(null)
-      })
-      .catch((e) => setError(e.message || 'Delete failed'))
-      .finally(() => setDeletingId(null))
+    try {
+      await deleteApplication(appId)
+      setApps((prev) => prev.filter((a) => a.id !== appId))
+      setDeleteConfirm(null)
+    } catch (e) {
+      setError(e.message || 'Delete failed')
+    } finally {
+      setDeletingId(null)
+    }
   }
 
   return (
@@ -117,39 +114,24 @@ export default function ApplicationList({ job, onClose }) {
       </div>
 
       {deleteConfirm && (
-        <div
-          className="modal-backdrop modal-backdrop--center"
-          onClick={closeDeleteConfirm}
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="delete-app-confirm-title"
-        >
-          <div className="modal-content modal-content--confirm" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
-              <h2 id="delete-app-confirm-title" className="modal-title">Delete application?</h2>
-              <button type="button" className="modal-close" onClick={closeDeleteConfirm} aria-label="Close">×</button>
-            </div>
-            <div className="modal-body">
-              <p className="delete-confirm-message">
-                Application from &ldquo;{deleteConfirm.full_name}&rdquo; will be permanently deleted. This cannot be undone.
-              </p>
-              <div className="modal-actions">
-                <button type="button" className="btn btn-outline" onClick={closeDeleteConfirm} disabled={!!deletingId}>
-                  Cancel
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-danger"
-                  onClick={handleConfirmDelete}
-                  disabled={!!deletingId}
-                >
-                  {deletingId === deleteConfirm.id ? 'Deleting…' : 'Delete'}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ConfirmModal
+          titleId="delete-app-confirm-title"
+          title="Delete application?"
+          message={<>Application from &ldquo;{deleteConfirm.full_name}&rdquo; will be permanently deleted. This cannot be undone.</>}
+          onCancel={closeDeleteConfirm}
+          onConfirm={handleConfirmDelete}
+          confirmLabel={deletingId === deleteConfirm.id ? 'Deleting…' : 'Delete'}
+          busy={!!deletingId}
+        />
       )}
     </Fragment>
   )
+}
+
+ApplicationList.propTypes = {
+  job: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    title: PropTypes.string,
+  }).isRequired,
+  onClose: PropTypes.func.isRequired,
 }

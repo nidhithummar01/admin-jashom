@@ -2,6 +2,7 @@ import { Fragment, useState, useEffect, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { getJobs, deleteJob } from '../api'
 import ApplicationList from './ApplicationList'
+import ConfirmModal from './ConfirmModal'
 
 const STATUS_COLOR = { published: '#22c55e', draft: '#f59e0b', closed: '#6b7280' }
 
@@ -27,13 +28,6 @@ export default function JobList() {
   const closeDeleteConfirm = useCallback(() => {
     if (!deletingId) setDeleteConfirm(null)
   }, [deletingId])
-
-  useEffect(() => {
-    if (!deleteConfirm) return
-    const onKey = (e) => e.key === 'Escape' && closeDeleteConfirm()
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [deleteConfirm, closeDeleteConfirm])
 
   const handleConfirmDelete = () => {
     if (!deleteConfirm) return
@@ -118,33 +112,15 @@ export default function JobList() {
 
       {/* Delete confirm modal */}
       {deleteConfirm && (
-        <div
-          className="modal-backdrop modal-backdrop--center"
-          onClick={closeDeleteConfirm}
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="delete-job-confirm-title"
-        >
-          <div className="modal-content modal-content--confirm" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
-              <h2 id="delete-job-confirm-title" className="modal-title">Delete job?</h2>
-              <button type="button" className="modal-close" onClick={closeDeleteConfirm} aria-label="Close">×</button>
-            </div>
-            <div className="modal-body">
-              <p className="delete-confirm-message">
-                &ldquo;{deleteConfirm.title}&rdquo; will be permanently deleted. This cannot be undone, and all applications for this job will be detached.
-              </p>
-              <div className="modal-actions">
-                <button type="button" className="btn btn-outline" onClick={closeDeleteConfirm} disabled={!!deletingId}>
-                  Cancel
-                </button>
-                <button type="button" className="btn btn-danger" onClick={handleConfirmDelete} disabled={!!deletingId}>
-                  {deletingId ? 'Deleting…' : 'Yes, Delete'}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ConfirmModal
+          titleId="delete-job-confirm-title"
+          title="Delete job?"
+          message={<>&ldquo;{deleteConfirm.title}&rdquo; will be permanently deleted. This cannot be undone, and all applications for this job will be detached.</>}
+          onCancel={closeDeleteConfirm}
+          onConfirm={handleConfirmDelete}
+          confirmLabel={deletingId ? 'Deleting…' : 'Yes, Delete'}
+          busy={!!deletingId}
+        />
       )}
     </>
   )

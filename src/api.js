@@ -49,7 +49,8 @@ export const getBlogs = (params = {}) => {
   if (params.limit != null) q.set('limit', params.limit)
   if (params.offset != null) q.set('offset', params.offset)
   const query = q.toString()
-  return api(`/v1/admin/blogs${query ? `?${query}` : ''}`).then((r) => {
+  const path = query ? `/v1/admin/blogs?${query}` : '/v1/admin/blogs'
+  return api(path).then((r) => {
     if (!r.ok) throw new Error(r.statusText || 'Failed to fetch blogs')
     return r.json()
   })
@@ -92,7 +93,8 @@ export const getJobs = (params = {}) => {
   if (params.limit != null) q.set('limit', params.limit)
   if (params.offset != null) q.set('offset', params.offset)
   const query = q.toString()
-  return api(`/v1/admin/jobs${query ? `?${query}` : ''}`).then((r) => {
+  const path = query ? `/v1/admin/jobs?${query}` : '/v1/admin/jobs'
+  return api(path).then((r) => {
     if (!r.ok) throw new Error(r.statusText || 'Failed to fetch jobs')
     return r.json()
   })
@@ -129,7 +131,8 @@ export const getApplications = (params = {}) => {
   if (params.status) q.set('status', params.status)
   if (params.limit != null) q.set('limit', params.limit)
   const query = q.toString()
-  return api(`/v1/applications${query ? `?${query}` : ''}`).then((r) => {
+  const path = query ? `/v1/applications?${query}` : '/v1/applications'
+  return api(path).then((r) => {
     if (!r.ok) throw new Error(r.statusText || 'Failed to fetch applications')
     return r.json()
   })

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import PropTypes from 'prop-types'
 import { createJob, updateJob } from '../api'
 
 const EMPTY = {
@@ -15,7 +16,7 @@ const EMPTY = {
 }
 
 function slugify(str) {
-  return str.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+  return str.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/(?:^-)|(?:-$)/g, '')
 }
 
 export default function JobAddForm({ initialData, jobId }) {
@@ -73,6 +74,8 @@ export default function JobAddForm({ initialData, jobId }) {
       setSaving(false)
     }
   }
+
+  const saveLabel = jobId ? 'Update Job' : 'Publish Job'
 
   return (
     <form onSubmit={handleSubmit} className="blog-form">
@@ -188,7 +191,7 @@ export default function JobAddForm({ initialData, jobId }) {
       {/* Actions */}
       <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
         <button type="submit" className="btn btn-primary" disabled={saving}>
-          {saving ? 'Saving…' : jobId ? 'Update Job' : 'Publish Job'}
+          {saving ? 'Saving…' : saveLabel}
         </button>
         <button type="button" className="btn btn-secondary" onClick={() => navigate('/jobs')}>
           Cancel
@@ -197,4 +200,24 @@ export default function JobAddForm({ initialData, jobId }) {
 
     </form>
   )
+}
+
+JobAddForm.propTypes = {
+  initialData: PropTypes.shape({
+    title: PropTypes.string,
+    slug: PropTypes.string,
+    department: PropTypes.string,
+    location: PropTypes.string,
+    employment_type: PropTypes.string,
+    experience: PropTypes.string,
+    salary_range: PropTypes.string,
+    description: PropTypes.string,
+    requirements: PropTypes.string,
+  }),
+  jobId: PropTypes.number,
+}
+
+JobAddForm.defaultProps = {
+  initialData: null,
+  jobId: null,
 }
