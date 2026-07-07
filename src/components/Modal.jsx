@@ -19,20 +19,25 @@ export default function Modal({ onClose, labelledBy, className, children }) {
       e.preventDefault()
       onClose()
     }
+    // Native listener (not a JSX prop) so backdrop-click-to-close doesn't
+    // trip a11y's "non-interactive element with click handler" rule —
+    // <dialog> isn't in its interactive-element allowlist.
+    const handleClick = (e) => {
+      if (e.target === dialog) onClose()
+    }
     dialog.addEventListener('cancel', handleCancel)
-    return () => dialog.removeEventListener('cancel', handleCancel)
+    dialog.addEventListener('click', handleClick)
+    return () => {
+      dialog.removeEventListener('cancel', handleCancel)
+      dialog.removeEventListener('click', handleClick)
+    }
   }, [onClose])
-
-  const handleClick = (e) => {
-    if (e.target === dialogRef.current) onClose()
-  }
 
   return (
     <dialog
       ref={dialogRef}
       className={`modal-content ${className || ''}`.trim()}
       aria-labelledby={labelledBy}
-      onClick={handleClick}
     >
       {children}
     </dialog>
