@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { createBlog, updateBlog } from '../api'
+import { createBlog, updateBlog, getAuthors } from '../api'
 import ImagePicker from './ImagePicker'
 import RichTextEditor from './RichTextEditor'
 
@@ -19,6 +19,7 @@ export default function BlogAddForm({ initialBlog = null, onSuccess }) {
   const [slug, setSlug] = useState('')
   const [excerpt, setExcerpt] = useState('')
   const [author, setAuthor] = useState('')
+  const [authors, setAuthors] = useState([])
   const [imageUrl, setImageUrl] = useState('')
   const [imageAlt, setImageAlt] = useState('')
   const [imageName, setImageName] = useState('')
@@ -33,6 +34,10 @@ export default function BlogAddForm({ initialBlog = null, onSuccess }) {
   const [schemaCode, setSchemaCode] = useState('')
 
   const isEdit = !!initialBlog
+
+  useEffect(() => {
+    getAuthors().then(setAuthors).catch(() => {})
+  }, [])
 
   useEffect(() => {
     if (!initialBlog) return
@@ -157,7 +162,12 @@ export default function BlogAddForm({ initialBlog = null, onSuccess }) {
         </div>
         <div className="field">
           <label htmlFor="author">Author</label>
-          <input id="author" type="text" placeholder="Author name" value={author} onChange={(e) => setAuthor(e.target.value)} />
+          <select id="author" value={author} onChange={(e) => setAuthor(e.target.value)}>
+            <option value="">— Select author —</option>
+            {authors.map((a) => (
+              <option key={a.id} value={a.name}>{a.name} · {a.role}</option>
+            ))}
+          </select>
         </div>
         <div className="field">
           <label htmlFor="publishedAt">Publish date</label>
