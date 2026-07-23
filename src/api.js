@@ -85,6 +85,14 @@ export const deleteBlog = (id) =>
     if (!r.ok) throw new Error(r.statusText || 'Failed to delete blog')
   })
 
+// ── Authors ─────────────────────────────────────────────────────────────────
+
+export const getAuthors = () =>
+  api('/v1/authors').then((r) => {
+    if (!r.ok) throw new Error(r.statusText || 'Failed to fetch authors')
+    return r.json()
+  })
+
 // ── Jobs ────────────────────────────────────────────────────────────────────
 
 export const getJobs = (params = {}) => {
